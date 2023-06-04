@@ -23,9 +23,17 @@ namespace BulkyWeb.Controllers
         }
 
         // POST - CREATE
-        [HttpPost]
+        [HttpPost] 
         public IActionResult Create(Category obj)
         {
+            if (obj.Name == obj.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("name", "The Display Order cannot be the same as the Category Name");
+            }
+            //if (obj.Name.ToLower() == "test")
+            //{
+            //    ModelState.AddModelError("", "Invalid name of Category");
+            //}
             if (ModelState.IsValid)
             {
                 _db.Category.Add(obj);
