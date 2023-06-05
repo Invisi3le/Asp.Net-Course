@@ -69,17 +69,44 @@ namespace BulkyWeb.Controllers
             {
                 ModelState.AddModelError("name", "The Display Order cannot be the same as the Category Name");
             }
-            //if (obj.Name.ToLower() == "test")
-            //{
-            //    ModelState.AddModelError("", "Invalid name of Category");
-            //}
             if (ModelState.IsValid)
             {
-                _db.Category.Add(obj);
+                _db.Category.Update(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View();
+
+        }
+
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            Category? categoryFromDb = _db.Category.Find(id);
+
+            if (categoryFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(categoryFromDb);
+        }
+
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePOST(int? id)
+        {
+            Category obj = _db.Category.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            _db.Category.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
 
         }
     }
